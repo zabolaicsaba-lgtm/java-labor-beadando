@@ -92,4 +92,12 @@ class JavaLaborBeadandoApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("A bejelentkezés jelenleg nem érhető el.")));
     }
+
+    @Test
+    void messagesIndicateUnavailableDatabaseForAuthenticatedUsers() throws Exception {
+        mockMvc.perform(get("/uzenetek").with(
+                        org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("teszt").roles("USER")))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Az üzenetek jelenleg nem érhetők el.")));
+    }
 }

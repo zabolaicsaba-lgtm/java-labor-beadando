@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Configuration
@@ -35,10 +36,13 @@ public class SecurityConfig {
         return http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/adatbazis", "/kapcsolat", "/diagram", "/rest", "/login", "/regisztracio", "/css/**", "/assets/**", "/js/**", "/vendor/**", "/error").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tornyok", "/api/tornyok/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/uzenetek").hasAnyRole("USER", "ADMIN")
                 .anyRequest().denyAll())
                 .exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
                         new HttpStatusEntryPoint(HttpStatus.FORBIDDEN),
-                        PathPatternRequestMatcher.withDefaults().matcher("/api/**")))
+                        PathPatternRequestMatcher.withDefaults().matcher("/api/**"))
+                        .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/uzenetek")))
                 .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
                 .build();

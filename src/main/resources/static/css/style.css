@@ -10,3 +10,8 @@ body {
 #footer .copyright {
     width: 100%;
 }
+
+.uzenet-szoveg {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}

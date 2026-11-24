@@ -46,6 +46,9 @@ class KapcsolatControllerTest {
         mockMvc.perform(get("/abc123/kapcsolat").contextPath("/abc123"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("action=\"/abc123/kapcsolat\"")))
+                .andExpect(content().string(containsString("bejelentkezett felhasználója láthatja")))
+                .andExpect(content().string(containsString("Ne adj meg bizalmas adatokat.")))
+                .andExpect(content().string(containsString("aria-describedby=\"uzenet-tajekoztato\"")))
                 .andExpect(content().string(containsString("name=\"_csrf\"")));
     }
 
@@ -73,6 +76,7 @@ class KapcsolatControllerTest {
                         .param("szoveg", " "))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Add meg a nevedet.")))
+                .andExpect(content().string(containsString("bejelentkezett felhasználója láthatja")))
                 .andExpect(content().string(containsString("Adj meg egy érvényes e-mail-címet.")))
                 .andExpect(content().string(containsString("Írd meg az üzenetedet.")));
 

@@ -30,7 +30,10 @@
             <p th:if="${!adatbazisElerheto}" role="alert">Az üzenetküldés jelenleg nem érhető el. Az üzemeltetőnek be kell állítania az adatbázis-kapcsolatot.</p>
             <div th:if="${adatbazisElerheto}">
                 <p th:if="${sikeresKuldes}" role="status">Köszönjük! Az üzenetedet elmentettük.</p>
-                <form th:action="@{/kapcsolat}" th:object="${urlap}" method="post">
+                <p id="uzenet-tajekoztato">A beküldött nevet, e-mail-címet és üzenetet az oldal összes
+                    bejelentkezett felhasználója láthatja. Ne adj meg bizalmas adatokat.
+                    Az üzenetet az adatbázisba mentjük, e-mailt nem küldünk.</p>
+                <form th:action="@{/kapcsolat}" th:object="${urlap}" method="post" aria-describedby="uzenet-tajekoztato">
                     <label for="nev">Név</label>
                     <input id="nev" type="text" th:field="*{nev}" maxlength="100" required
                            th:attr="aria-invalid=${#fields.hasErrors('nev')},aria-describedby=${#fields.hasErrors('nev')} ? 'nev-hiba' : null">

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Széltorony szerkesztése · Szélerőművek</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body><div id="wrapper">
+    <header id="header"><h1 th:text="${modositas} ? 'Széltorony szerkesztése' : 'Új széltoronyrekord'"></h1></header>
+    <nav id="nav" aria-label="Fő navigáció"><ul>
+        <li><a th:href="@{/}">Főoldal</a></li><li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+        <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li><li><a th:href="@{/diagram}">Diagram</a></li>
+        <li><a th:href="@{/rest}">REST</a></li><th:block th:replace="~{auth-menu :: auth}"></th:block>
+    </ul></nav>
+    <main id="main"><section class="main">
+        <form th:action="${modositas} ? @{/admin/{id}/szerkesztes(id=${id})} : @{/admin/uj}" th:object="${adatok}" method="post">
+            <label for="darab">Tornyok száma</label>
+            <input id="darab" type="number" min="1" th:field="*{darab}" required>
+            <p th:if="${#fields.hasErrors('darab')}" th:errors="*{darab}" role="alert"></p>
+            <label for="teljesitmeny">Teljesítmény (kW / torony)</label>
+            <input id="teljesitmeny" type="number" min="1" th:field="*{teljesitmeny}" required>
+            <p th:if="${#fields.hasErrors('teljesitmeny')}" th:errors="*{teljesitmeny}" role="alert"></p>
+            <label for="kezdev">Üzembe helyezés éve</label>
+            <input id="kezdev" type="number" min="1" max="9999" th:field="*{kezdev}" required>
+            <p th:if="${#fields.hasErrors('kezdev')}" th:errors="*{kezdev}" role="alert"></p>
+            <label for="helyszinId">Helyszín</label>
+            <select id="helyszinId" th:field="*{helyszinId}" required>
+                <option value="">Válassz helyszínt</option>
+                <option th:each="helyszin : ${helyszinek}" th:value="${helyszin.id}" th:text="${helyszin.nev}"></option>
+            </select>
+            <p th:if="${#fields.hasErrors('helyszinId')}" th:errors="*{helyszinId}" role="alert"></p>
+            <ul class="actions"><li><button type="submit" class="primary">Mentés</button></li>
+                <li><a class="button" th:href="@{/admin}">Vissza</a></li></ul>
+        </form>
+    </section></main>
+    <footer id="footer"><p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+        Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+        <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+        <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p></footer>
+</div></body></html>

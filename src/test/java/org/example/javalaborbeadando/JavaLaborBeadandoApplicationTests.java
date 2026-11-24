@@ -42,7 +42,7 @@ class JavaLaborBeadandoApplicationTests {
     @Test
     void unfinishedRoutesAreNotPublic() throws Exception {
         mockMvc.perform(get("/admin"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test

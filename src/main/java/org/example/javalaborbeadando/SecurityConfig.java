@@ -37,12 +37,15 @@ public class SecurityConfig {
                 .requestMatchers("/", "/adatbazis", "/kapcsolat", "/diagram", "/rest", "/login", "/regisztracio", "/css/**", "/assets/**", "/js/**", "/vendor/**", "/error").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/tornyok", "/api/tornyok/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/uzenetek").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                 .anyRequest().denyAll())
                 .exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
                         new HttpStatusEntryPoint(HttpStatus.FORBIDDEN),
                         PathPatternRequestMatcher.withDefaults().matcher("/api/**"))
                         .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/uzenetek")))
+                                PathPatternRequestMatcher.withDefaults().matcher("/uzenetek"))
+                        .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/admin/**")))
                 .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
                 .build();

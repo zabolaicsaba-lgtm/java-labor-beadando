@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRUD · Szélerőművek</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body><div id="wrapper">
+    <header id="header"><h1>Széltornyok kezelése</h1></header>
+    <nav id="nav" aria-label="Fő navigáció"><ul>
+        <li><a th:href="@{/}">Főoldal</a></li><li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+        <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li><li><a th:href="@{/diagram}">Diagram</a></li>
+        <li><a th:href="@{/rest}">REST</a></li><th:block th:replace="~{auth-menu :: auth}"></th:block>
+    </ul></nav>
+    <main id="main"><section class="main">
+        <p th:if="${!adatbazisElerheto}" role="alert">Az adatbázis jelenleg nem érhető el.</p>
+        <div th:if="${adatbazisElerheto}">
+            <p th:if="${siker}" th:text="${siker}" role="status"></p>
+            <p><a class="button primary" th:href="@{/admin/uj}">Új széltoronyrekord</a></p>
+            <p th:if="${#lists.isEmpty(tornyok)}">Még nincs széltoronyrekord.</p>
+            <div class="table-wrapper" th:unless="${#lists.isEmpty(tornyok)}"><table>
+                <caption>Széltoronyrekordok</caption>
+                <thead><tr><th>Azonosító</th><th>Település</th><th>Megye</th><th>Darab</th>
+                    <th>Teljesítmény (kW / torony)</th><th>Év</th><th>Műveletek</th></tr></thead>
+                <tbody><tr th:each="torony : ${tornyok}">
+                    <td th:text="${torony.id}"></td><td th:text="${torony.helyszin.nev}"></td>
+                    <td th:text="${torony.helyszin.megye.nev}"></td><td th:text="${torony.darab}"></td>
+                    <td th:text="${torony.teljesitmeny}"></td><td th:text="${torony.kezdev}"></td>
+                    <td><a th:href="@{/admin/{id}/szerkesztes(id=${torony.id})}">Szerkesztés</a>
+                        <form th:action="@{/admin/{id}/torles(id=${torony.id})}" method="post">
+                            <button type="submit">Törlés</button>
+                        </form>
+                    </td>
+                </tr></tbody>
+            </table></div>
+        </div>
+    </section></main>
+    <footer id="footer"><p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+        Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+        <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+        <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p></footer>
+</div></body></html>

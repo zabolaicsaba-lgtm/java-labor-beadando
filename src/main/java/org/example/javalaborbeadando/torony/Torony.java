@@ -3,6 +3,8 @@ package org.example.javalaborbeadando.torony;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -14,6 +16,7 @@ import org.example.javalaborbeadando.helyszin.Helyszin;
 public class Torony {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
@@ -30,6 +33,13 @@ public class Torony {
     private Helyszin helyszin;
 
     protected Torony() {
+    }
+
+    public Torony(Integer darab, Integer teljesitmeny, Integer kezdev, Helyszin helyszin) {
+        this.darab = darab;
+        this.teljesitmeny = teljesitmeny;
+        this.kezdev = kezdev;
+        this.helyszin = helyszin;
     }
 
     public Integer getId() {

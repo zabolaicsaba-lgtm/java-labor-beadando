@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.example.javalaborbeadando.helyszin.HelyszinRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +18,9 @@ class ToronyRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private HelyszinRepository helyszinRepository;
 
     @Test
     void readsTowerAndItsLocationAndCounty() {
@@ -37,5 +41,22 @@ class ToronyRepositoryTest {
         assertThat(torony.getHelyszin().getNev()).isEqualTo("Mosonmagyaróvár");
         assertThat(torony.getHelyszin().getMegye().getNev()).isEqualTo("Győr-Moson-Sopron");
         assertThat(repository.findById(999)).isEmpty();
+    }
+
+    @Test
+    void assignsIdWhenSavingNewTower() {
+        jdbcTemplate.update("INSERT INTO megye (id, nev, regio) VALUES (?, ?, ?)",
+                15, "Győr-Moson-Sopron", "Nyugat-Dunántúl");
+        jdbcTemplate.update("INSERT INTO helyszin (id, nev, megyeid) VALUES (?, ?, ?)",
+                4, "Mosonmagyaróvár", 15);
+
+        Torony torony = repository.saveAndFlush(new Torony(2, 2000, 2010,
+                helyszinRepository.findById(4).orElseThrow()));
+
+        assertThat(torony.getId()).isNotNull().isPositive();
+        assertThat(jdbcTemplate.queryForObject("SELECT darab FROM torony WHERE id = ?",
+                Integer.class, torony.getId())).isEqualTo(2);
+        assertThat(jdbcTemplate.queryForObject("SELECT helyszinid FROM torony WHERE id = ?",
+                Integer.class, torony.getId())).isEqualTo(4);
     }
 }

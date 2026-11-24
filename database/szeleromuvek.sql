@@ -16,7 +16,7 @@ CREATE TABLE helyszin (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE torony (
-    id INT NOT NULL PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     darab INT NOT NULL,
     teljesitmeny INT NOT NULL,
     kezdev INT NOT NULL,

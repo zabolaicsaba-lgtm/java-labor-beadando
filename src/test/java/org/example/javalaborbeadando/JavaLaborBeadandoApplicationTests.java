@@ -52,4 +52,11 @@ class JavaLaborBeadandoApplicationTests {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Az adatbázis jelenleg nem érhető el")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("/abc123/")));
     }
+
+    @Test
+    void contactPageReportsWhenDatabaseProfileIsDisabled() throws Exception {
+        mockMvc.perform(get("/kapcsolat"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Az üzenetküldés jelenleg nem érhető el.")));
+    }
 }

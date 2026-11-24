@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kapcsolat · Szélerőművek Magyarországon</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div id="wrapper">
+    <header id="header">
+        <h1>Kapcsolat</h1>
+        <p>Írj nekünk a szélerőművekről!</p>
+    </header>
+    <nav id="nav" aria-label="Fő navigáció">
+        <ul>
+            <li><a th:href="@{/}">Főoldal</a></li>
+            <li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+            <li><a th:href="@{/kapcsolat}" class="active" aria-current="page">Kapcsolat</a></li>
+        </ul>
+    </nav>
+    <main id="main">
+        <section class="main">
+            <header class="major"><h2>Üzenet küldése</h2></header>
+            <p th:if="${!adatbazisElerheto}" role="alert">Az üzenetküldés jelenleg nem érhető el. Az üzemeltetőnek be kell állítania az adatbázis-kapcsolatot.</p>
+            <div th:if="${adatbazisElerheto}">
+                <p th:if="${sikeresKuldes}" role="status">Köszönjük! Az üzenetedet elmentettük.</p>
+                <form th:action="@{/kapcsolat}" th:object="${urlap}" method="post">
+                    <label for="nev">Név</label>
+                    <input id="nev" type="text" th:field="*{nev}" maxlength="100" required
+                           th:attr="aria-invalid=${#fields.hasErrors('nev')},aria-describedby=${#fields.hasErrors('nev')} ? 'nev-hiba' : null">
+                    <p id="nev-hiba" th:if="${#fields.hasErrors('nev')}" th:errors="*{nev}" role="alert"></p>
+
+                    <label for="email">E-mail-cím</label>
+                    <input id="email" type="email" th:field="*{email}" maxlength="254" required
+                           th:attr="aria-invalid=${#fields.hasErrors('email')},aria-describedby=${#fields.hasErrors('email')} ? 'email-hiba' : null">
+                    <p id="email-hiba" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" role="alert"></p>
+
+                    <label for="szoveg">Üzenet</label>
+                    <textarea id="szoveg" th:field="*{szoveg}" maxlength="4000" rows="6" required
+                              th:attr="aria-invalid=${#fields.hasErrors('szoveg')},aria-describedby=${#fields.hasErrors('szoveg')} ? 'szoveg-hiba' : null"></textarea>
+                    <p id="szoveg-hiba" th:if="${#fields.hasErrors('szoveg')}" th:errors="*{szoveg}" role="alert"></p>
+                    <ul class="actions"><li><button type="submit" class="primary">Üzenet elküldése</button></li></ul>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer id="footer">
+        <p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+            Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+            <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+            <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+    </footer>
+</div>
+</body>
+</html>

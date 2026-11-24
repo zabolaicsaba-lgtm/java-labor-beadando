@@ -114,10 +114,21 @@ class AdminToronyControllerTest {
     void invalidInputAndMissingRecordsAreHandled() throws Exception {
         mockMvc.perform(post("/admin/uj").with(user("admin").roles("ADMIN")).with(csrf())
                         .param("darab", "0").param("teljesitmeny", "2000").param("kezdev", "2010").param("helyszinId", "999"))
-                .andExpect(status().isOk()).andExpect(content().string(containsString("Válassz létező helyszínt.")));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Válassz létező helyszínt.")))
+                .andExpect(content().string(containsString("A tornyok száma pozitív egész szám legyen.")))
+                .andExpect(content().string(containsString("aria-describedby=\"darab-hiba\"")));
         mockMvc.perform(post("/admin/uj").with(user("admin").roles("ADMIN")).with(csrf())
                         .param("darab", "nemszam").param("teljesitmeny", "2000").param("kezdev", "2010").param("helyszinId", "4"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("A tornyok száma egész szám legyen.")));
+        mockMvc.perform(post("/admin/uj").with(user("admin").roles("ADMIN")).with(csrf())
+                        .param("darab", "").param("teljesitmeny", "-1").param("kezdev", "10000").param("helyszinId", ""))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Add meg a tornyok számát.")))
+                .andExpect(content().string(containsString("A teljesítmény pozitív egész szám legyen.")))
+                .andExpect(content().string(containsString("Az év 1 és 9999 között legyen.")))
+                .andExpect(content().string(containsString("Válassz helyszínt.")));
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM torony", Integer.class)).isZero();
         mockMvc.perform(get("/admin/999/szerkesztes").with(user("admin").roles("ADMIN")))
                 .andExpect(status().isNotFound());

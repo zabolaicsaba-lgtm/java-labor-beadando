@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
@@ -91,5 +93,48 @@ class AutentikacioTest {
         jdbc.update("INSERT INTO felhasznalo (username, jelszo_hash, szerepkor) VALUES (?, ?, ?)", "admin", encoder.encode("password123"), "ADMIN");
         mockMvc.perform(formLogin().user("admin").password("password123"))
                 .andExpect(authenticated().withRoles("ADMIN"));
+    }
+
+    @Test
+    void loginReturnsToRequestedPageUnderContextPath() throws Exception {
+        jdbc.update("INSERT INTO felhasznalo (username, jelszo_hash, szerepkor) VALUES (?, ?, ?)",
+                "elek", encoder.encode("password123"), "USER");
+        var savedRequest = mockMvc.perform(get("/abc123/uzenetek").contextPath("/abc123"))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+        MockHttpSession session = (MockHttpSession) savedRequest.getRequest().getSession(false);
+        assertThat(session).isNotNull();
+
+        mockMvc.perform(post("/abc123/login").contextPath("/abc123").session(session).with(csrf())
+                        .param("username", "elek").param("password", "password123"))
+                .andExpect(authenticated().withRoles("USER"))
+                .andExpect(redirectedUrlPattern("**/abc123/uzenetek?continue"));
+    }
+
+    @Test
+    void directLoginReturnsToHome() throws Exception {
+        jdbc.update("INSERT INTO felhasznalo (username, jelszo_hash, szerepkor) VALUES (?, ?, ?)",
+                "elek", encoder.encode("password123"), "USER");
+        mockMvc.perform(post("/abc123/login").contextPath("/abc123").with(csrf())
+                        .param("username", "elek").param("password", "password123"))
+                .andExpect(authenticated().withRoles("USER"))
+                .andExpect(redirectedUrl("/abc123/"));
+    }
+
+    @Test
+    void savedAdminRequestDoesNotGrantAdminAccess() throws Exception {
+        jdbc.update("INSERT INTO felhasznalo (username, jelszo_hash, szerepkor) VALUES (?, ?, ?)",
+                "elek", encoder.encode("password123"), "USER");
+        var savedRequest = mockMvc.perform(get("/admin"))
+                .andExpect(status().is3xxRedirection()).andReturn();
+        MockHttpSession session = (MockHttpSession) savedRequest.getRequest().getSession(false);
+        assertThat(session).isNotNull();
+        var login = mockMvc.perform(post("/login").session(session).with(csrf())
+                        .param("username", "elek").param("password", "password123"))
+                .andExpect(authenticated().withRoles("USER"))
+                .andExpect(redirectedUrlPattern("**/admin?continue")).andReturn();
+        MockHttpSession authenticatedSession = (MockHttpSession) login.getRequest().getSession(false);
+        mockMvc.perform(get("/admin").session(authenticatedSession).param("continue", ""))
+                .andExpect(status().isForbidden());
     }
 }

@@ -46,7 +46,7 @@ public class SecurityConfig {
                                 PathPatternRequestMatcher.withDefaults().matcher("/uzenetek"))
                         .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
                                 PathPatternRequestMatcher.withDefaults().matcher("/admin/**")))
-                .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
+                .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", false).permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
                 .build();
     }

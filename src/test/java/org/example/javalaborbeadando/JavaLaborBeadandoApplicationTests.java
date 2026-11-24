@@ -82,4 +82,14 @@ class JavaLaborBeadandoApplicationTests {
         mockMvc.perform(get("/api/tornyok/1"))
                 .andExpect(status().isServiceUnavailable());
     }
+
+    @Test
+    void registrationAndLoginIndicateUnavailableDatabase() throws Exception {
+        mockMvc.perform(get("/regisztracio"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("A regisztráció jelenleg nem érhető el.")));
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("A bejelentkezés jelenleg nem érhető el.")));
+    }
 }

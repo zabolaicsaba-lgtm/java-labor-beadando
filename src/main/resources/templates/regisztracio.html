@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Regisztráció · Szélerőművek</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div id="wrapper">
+    <header id="header"><h1>Regisztráció</h1></header>
+    <nav id="nav" aria-label="Fő navigáció"><ul>
+        <li><a th:href="@{/}">Főoldal</a></li>
+        <li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+        <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li>
+        <li><a th:href="@{/diagram}">Diagram</a></li>
+        <li><a th:href="@{/rest}">REST</a></li>
+        <th:block th:replace="~{auth-menu :: auth}"></th:block>
+    </ul></nav>
+    <main id="main"><section class="main">
+        <p th:if="${!adatbazisElerheto}" role="alert">A regisztráció jelenleg nem érhető el.</p>
+        <form th:if="${adatbazisElerheto}" th:action="@{/regisztracio}" th:object="${urlap}" method="post">
+            <label for="username">Felhasználónév</label>
+            <input id="username" th:field="*{username}" autocomplete="username" required maxlength="50">
+            <p>3–50 karakter: kisbetű, szám, pont, kötőjel vagy aláhúzás.</p>
+            <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" role="alert"></p>
+            <label for="password">Jelszó</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="72">
+            <p>8–72 ASCII karakter.</p>
+            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" role="alert"></p>
+            <ul class="actions"><li><button type="submit" class="primary">Regisztráció</button></li></ul>
+        </form>
+    </section></main>
+    <footer id="footer"><p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+        Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+        <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+        <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p></footer>
+</div>
+</body>
+</html>

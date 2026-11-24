@@ -21,6 +21,7 @@
             <li><a th:href="@{/kapcsolat}" class="active" aria-current="page">Kapcsolat</a></li>
             <li><a th:href="@{/diagram}">Diagram</a></li>
             <li><a th:href="@{/rest}">REST</a></li>
+            <th:block th:replace="~{auth-menu :: auth}"></th:block>
         </ul>
     </nav>
     <main id="main">

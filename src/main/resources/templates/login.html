@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bejelentkezés · Szélerőművek</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div id="wrapper">
+    <header id="header"><h1>Bejelentkezés</h1></header>
+    <nav id="nav" aria-label="Fő navigáció"><ul>
+        <li><a th:href="@{/}">Főoldal</a></li>
+        <li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+        <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li>
+        <li><a th:href="@{/diagram}">Diagram</a></li>
+        <li><a th:href="@{/rest}">REST</a></li>
+        <th:block th:replace="~{auth-menu :: auth}"></th:block>
+    </ul></nav>
+    <main id="main"><section class="main">
+        <p th:if="${!adatbazisElerheto}" role="alert">A bejelentkezés jelenleg nem érhető el.</p>
+        <div th:if="${adatbazisElerheto}">
+            <p th:if="${regisztralt}" role="status">Sikeres regisztráció. Most már bejelentkezhetsz.</p>
+            <p th:if="${param.error}" role="alert">Hibás felhasználónév vagy jelszó.</p>
+            <form th:action="@{/login}" method="post">
+                <label for="username">Felhasználónév</label>
+                <input id="username" name="username" autocomplete="username" required>
+                <label for="password">Jelszó</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required>
+                <ul class="actions"><li><button type="submit" class="primary">Bejelentkezés</button></li></ul>
+            </form>
+        </div>
+    </section></main>
+    <footer id="footer"><p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+        Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+        <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+        <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<th:block th:fragment="auth">
+    <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Bejelentkezés</a></li>
+    <li sec:authorize="isAnonymous()"><a th:href="@{/regisztracio}">Regisztráció</a></li>
+    <li sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post"><button type="submit">Kijelentkezés</button></form>
+    </li>
+</th:block>
+</body>
+</html>

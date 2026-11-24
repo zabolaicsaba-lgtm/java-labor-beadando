@@ -1,0 +1,12 @@
+body {
+    background-color: #16483f;
+    background-image: linear-gradient(45deg, #267c5c 15%, #123f3a 85%);
+}
+
+#header.alt h1 {
+    font-weight: 400;
+}
+
+#footer .copyright {
+    width: 100%;
+}

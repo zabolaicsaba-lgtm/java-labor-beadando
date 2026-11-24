@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Ismerd meg a magyarországi szélerőművek adatait.">
+    <title>Szélerőművek Magyarországon</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div id="wrapper">
+    <header id="header" class="alt">
+        <h1>Szélerőművek Magyarországon</h1>
+        <p>Fedezd fel, hol találhatók széltornyok Magyarországon,<br>
+            és milyen adatok mesélnek a működésükről.</p>
+        <a href="#az-adatbazisrol" class="button">Tudj meg többet</a>
+    </header>
+
+    <nav id="nav" aria-label="Fő navigáció">
+        <ul>
+            <li><a th:href="@{/}" class="active" aria-current="page">Főoldal</a></li>
+            <li><a href="#az-adatbazisrol">Az adatbázisról</a></li>
+            <li><a href="#adatok">Adatok</a></li>
+        </ul>
+    </nav>
+
+    <main id="main">
+        <section id="az-adatbazisrol" class="main">
+            <header class="major">
+                <h2>Energia a szélből</h2>
+            </header>
+            <p>Az alkalmazás egy magyarországi szélerőműveket bemutató adatbázisra épül.
+                A települések, megyék és széltornyok adatai együtt adnak képet a forrásban
+                szereplő erőművekről.</p>
+            <p>Az adatok egy adott időszakot tükröznek, ezért nem feltétlenül mutatják a jelenlegi állapotot.</p>
+        </section>
+
+        <section id="adatok" class="main special">
+            <header class="major">
+                <h2>Három nézőpont, egy történet</h2>
+            </header>
+            <ul class="features">
+                <li>
+                    <span class="icon solid major style1 fa-map" aria-hidden="true"></span>
+                    <h3>Megyék</h3>
+                    <p>A megyék és régióik segítenek elhelyezni a szélerőműveket az ország térképén.</p>
+                </li>
+                <li>
+                    <span class="icon solid major style3 fa-map-marker-alt" aria-hidden="true"></span>
+                    <h3>Helyszínek</h3>
+                    <p>Az adatbázis azokat a településeket tartalmazza, ahol széltornyok szerepelnek a forrásban.</p>
+                </li>
+                <li>
+                    <span class="icon solid major style5 fa-bolt" aria-hidden="true"></span>
+                    <h3>Széltornyok</h3>
+                    <p>Darabszám, teljesítmény és az üzembe helyezés éve: a tornyok legfontosabb jellemzői.</p>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer id="footer">
+        <p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+            Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+            <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+            <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+    </footer>
+</div>
+</body>
+</html>

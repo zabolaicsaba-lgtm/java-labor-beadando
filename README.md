@@ -42,7 +42,8 @@ aktiváld a `mysql` Spring-profilt, és add meg az alábbi környezeti változó
 A jelszót ne írd be a forráskódba, és ne commitold. Külső Tomcat esetén a
 beállításoknak a Tomcat folyamatában kell rendelkezésre állniuk; a megosztott
 szerver üzemeltetőjével egyeztesd, hogyan adhatók meg biztonságosan.
-Az alkalmazás jelenleg még nem jeleníti meg a táblák adatait; ez a következő
+A `Megye` entitás és a `MegyeRepository` a megye tábla lekérdezését készíti
+elő. Az alkalmazás jelenleg még nem jeleníti meg a táblák adatait; ez a következő
 fejlesztési lépésekben készül el.
 
 ## WAR-csomag

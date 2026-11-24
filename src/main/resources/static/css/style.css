@@ -7,6 +7,52 @@ body {
     font-weight: 400;
 }
 
+#nav {
+    display: block;
+    position: static;
+    width: 100%;
+    max-width: none;
+}
+
+#nav + #main {
+    padding-top: 0;
+}
+
+#nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25em;
+}
+
+#nav ul li {
+    margin: 0;
+}
+
+#nav ul li form {
+    margin: 0;
+}
+
+#nav ul li button {
+    height: 2.25em;
+    line-height: 2.25em;
+    padding: 0 1.25em;
+    font-size: inherit;
+    color: #636363 !important;
+    box-shadow: inset 0 0 0 1px #b0b0b0;
+}
+
+#nav ul li button:hover {
+    background-color: rgba(222, 222, 222, 0.25);
+}
+
+#nav ul li a:focus-visible,
+#nav ul li button:focus-visible {
+    outline: 2px solid #636363;
+    outline-offset: 2px;
+}
+
 #footer .copyright {
     width: 100%;
 }

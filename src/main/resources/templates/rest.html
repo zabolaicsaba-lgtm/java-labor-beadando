@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>REST · Szélerőművek Magyarországon</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div id="wrapper">
+    <header id="header">
+        <h1>REST API</h1>
+        <p>Széltoronyadatok JSON formátumban</p>
+    </header>
+    <nav id="nav" aria-label="Fő navigáció">
+        <ul>
+            <li><a th:href="@{/}">Főoldal</a></li>
+            <li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+            <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li>
+            <li><a th:href="@{/diagram}">Diagram</a></li>
+            <li><a th:href="@{/rest}" class="active" aria-current="page">REST</a></li>
+        </ul>
+    </nav>
+    <main id="main">
+        <section class="main">
+            <header class="major"><h2>Végpontok</h2></header>
+            <p>Az API bejelentkezés nélkül, kizárólag olvasásra használható. A válaszok a települést és a megyét is tartalmazzák.</p>
+            <ul>
+                <li><strong>GET</strong> <a th:href="@{/api/tornyok}"><code th:text="@{/api/tornyok}"></code></a> – az összes széltoronyrekord.</li>
+                <li><strong>GET</strong> <a th:href="@{/api/tornyok/1}"><code th:text="@{/api/tornyok/1}"></code></a> – egy rekord azonosító alapján; az 1 helyére más azonosító is írható.</li>
+            </ul>
+            <p>Nem létező azonosító esetén a válasz HTTP 404. Kikapcsolt adatbázis-profil esetén a végpontok HTTP 503 választ adnak.</p>
+        </section>
+    </main>
+    <footer id="footer">
+        <p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+            Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+            <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+            <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+    </footer>
+</div>
+</body>
+</html>

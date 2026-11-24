@@ -5,11 +5,15 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ToronyRepository extends JpaRepository<Torony, Integer> {
 
     @EntityGraph(attributePaths = {"helyszin", "helyszin.megye"})
     List<Torony> findAllByOrderByIdAsc();
+
+    @EntityGraph(attributePaths = {"helyszin", "helyszin.megye"})
+    Optional<Torony> findWithHelyszinById(Integer id);
 
     @Query("""
             select new org.example.javalaborbeadando.torony.MegyeiToronyszam(

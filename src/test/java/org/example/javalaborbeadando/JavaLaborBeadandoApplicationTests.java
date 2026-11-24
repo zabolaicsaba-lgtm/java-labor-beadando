@@ -70,4 +70,16 @@ class JavaLaborBeadandoApplicationTests {
         mockMvc.perform(get("/js/diagram.js"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void restPageIsPublicAndApiReportsUnavailableDatabase() throws Exception {
+        mockMvc.perform(get("/abc123/rest").contextPath("/abc123"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/abc123/api/tornyok")));
+        mockMvc.perform(get("/api/tornyok"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().contentTypeCompatibleWith("application/json"));
+        mockMvc.perform(get("/api/tornyok/1"))
+                .andExpect(status().isServiceUnavailable());
+    }
 }

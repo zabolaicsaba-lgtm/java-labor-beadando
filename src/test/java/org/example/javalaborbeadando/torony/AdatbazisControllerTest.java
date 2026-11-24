@@ -10,8 +10,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
@@ -91,5 +95,44 @@ class AdatbazisControllerTest {
         mockMvc.perform(get("/diagram"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Az adatbázisban még nincs diagramhoz használható széltoronyadat.")));
+    }
+
+    @Test
+    void apiReturnsTowersWithLocationAndCounty() throws Exception {
+        jdbcTemplate.update("INSERT INTO megye (id, nev, regio) VALUES (15, 'Győr-Moson-Sopron', 'Nyugat-Dunántúl')");
+        jdbcTemplate.update("INSERT INTO helyszin (id, nev, megyeid) VALUES (4, 'Mosonmagyaróvár', 15)");
+        jdbcTemplate.update("INSERT INTO torony (id, darab, teljesitmeny, kezdev, helyszinid) VALUES (10, 5, 2000, 2005, 4)");
+        jdbcTemplate.update("INSERT INTO torony (id, darab, teljesitmeny, kezdev, helyszinid) VALUES (13, 5, 2000, 2006, 4)");
+
+        mockMvc.perform(get("/abc123/api/tornyok").contextPath("/abc123"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(10))
+                .andExpect(jsonPath("$[1].id").value(13))
+                .andExpect(jsonPath("$[0].darab").value(5))
+                .andExpect(jsonPath("$[0].teljesitmeny").value(2000))
+                .andExpect(jsonPath("$[0].kezdev").value(2005))
+                .andExpect(jsonPath("$[0].helyszinId").value(4))
+                .andExpect(jsonPath("$[0].helyszin").value("Mosonmagyaróvár"))
+                .andExpect(jsonPath("$[0].megyeId").value(15))
+                .andExpect(jsonPath("$[0].megye").value("Győr-Moson-Sopron"))
+                .andExpect(jsonPath("$[0].regio").value("Nyugat-Dunántúl"));
+
+        mockMvc.perform(get("/api/tornyok/13"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(13))
+                .andExpect(jsonPath("$.helyszin").value("Mosonmagyaróvár"));
+        mockMvc.perform(get("/api/tornyok/999"))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/api/tornyok").with(csrf()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void emptyApiReturnsAnEmptyArray() throws Exception {
+        mockMvc.perform(get("/api/tornyok"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 }

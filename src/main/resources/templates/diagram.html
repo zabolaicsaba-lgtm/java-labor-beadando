@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Diagram · Szélerőművek Magyarországon</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/vendor/chartjs/chart.umd.min.js}"></script>
+    <script defer th:src="@{/js/diagram.js}"></script>
+</head>
+<body>
+<div id="wrapper">
+    <header id="header">
+        <h1>Diagram</h1>
+        <p>Széltornyok száma megyénként</p>
+    </header>
+    <nav id="nav" aria-label="Fő navigáció">
+        <ul>
+            <li><a th:href="@{/}">Főoldal</a></li>
+            <li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+            <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li>
+            <li><a th:href="@{/diagram}" class="active" aria-current="page">Diagram</a></li>
+        </ul>
+    </nav>
+    <main id="main">
+        <section class="main">
+            <header class="major"><h2>Széltornyok megyénként</h2></header>
+            <p th:if="${!adatbazisElerheto}" role="alert">A diagram jelenleg nem érhető el. Az üzemeltetőnek be kell állítania az adatbázis-kapcsolatot.</p>
+            <div th:if="${adatbazisElerheto}">
+                <p>Az ábra a forrásban szereplő tornyok darabszámát összegzi megyénként.
+                    Csak a tornyokkal rendelkező megyék szerepelnek. Az adatok nem feltétlenül aktuálisak.</p>
+                <p th:if="${#lists.isEmpty(osszesites)}">Az adatbázisban még nincs diagramhoz használható széltoronyadat.</p>
+                <div th:unless="${#lists.isEmpty(osszesites)}">
+                    <canvas id="megye-diagram" role="img" aria-label="Széltornyok száma megyénként; a részletes adatok az alábbi táblázatban találhatók."></canvas>
+                    <div class="table-wrapper">
+                        <table id="megyei-adatok">
+                            <caption>Széltornyok száma megyénként</caption>
+                            <thead><tr><th scope="col">Megye</th><th scope="col">Tornyok száma</th></tr></thead>
+                            <tbody>
+                            <tr th:each="sor : ${osszesites}">
+                                <td th:text="${sor.megye}"></td>
+                                <td th:text="${sor.darab}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer id="footer">
+        <p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+            Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+            <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+            <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+    </footer>
+</div>
+</body>
+</html>

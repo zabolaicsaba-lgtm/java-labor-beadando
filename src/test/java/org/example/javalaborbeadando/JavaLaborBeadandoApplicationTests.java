@@ -59,4 +59,15 @@ class JavaLaborBeadandoApplicationTests {
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Az üzenetküldés jelenleg nem érhető el.")));
     }
+
+    @Test
+    void diagramReportsWhenDatabaseProfileIsDisabled() throws Exception {
+        mockMvc.perform(get("/diagram"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("A diagram jelenleg nem érhető el.")));
+        mockMvc.perform(get("/vendor/chartjs/chart.umd.min.js"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/js/diagram.js"))
+                .andExpect(status().isOk());
+    }
 }

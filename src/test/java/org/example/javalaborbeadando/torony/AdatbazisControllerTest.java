@@ -65,4 +65,31 @@ class AdatbazisControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Az adatbázisban még nincs széltoronyadat.")));
     }
+
+    @Test
+    void diagramSumsTowersAcrossLocationsWithinEachCounty() throws Exception {
+        jdbcTemplate.update("INSERT INTO megye (id, nev, regio) VALUES (15, 'Győr-Moson-Sopron', 'Nyugat-Dunántúl')");
+        jdbcTemplate.update("INSERT INTO megye (id, nev, regio) VALUES (16, 'Vas', 'Nyugat-Dunántúl')");
+        jdbcTemplate.update("INSERT INTO helyszin (id, nev, megyeid) VALUES (4, 'Mosonmagyaróvár', 15)");
+        jdbcTemplate.update("INSERT INTO helyszin (id, nev, megyeid) VALUES (17, 'Levél', 15)");
+        jdbcTemplate.update("INSERT INTO helyszin (id, nev, megyeid) VALUES (9, 'Vép', 16)");
+        jdbcTemplate.update("INSERT INTO torony (id, darab, teljesitmeny, kezdev, helyszinid) VALUES (10, 5, 2000, 2005, 4)");
+        jdbcTemplate.update("INSERT INTO torony (id, darab, teljesitmeny, kezdev, helyszinid) VALUES (17, 12, 2000, 2006, 17)");
+        jdbcTemplate.update("INSERT INTO torony (id, darab, teljesitmeny, kezdev, helyszinid) VALUES (9, 1, 600, 2005, 9)");
+
+        mockMvc.perform(get("/abc123/diagram").contextPath("/abc123"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Győr-Moson-Sopron")))
+                .andExpect(content().string(containsString(">17</td>")))
+                .andExpect(content().string(containsString(">Vas</td>")))
+                .andExpect(content().string(containsString(">1</td>")))
+                .andExpect(content().string(containsString("/abc123/vendor/chartjs/chart.umd.min.js")));
+    }
+
+    @Test
+    void diagramReportsEmptyDatabase() throws Exception {
+        mockMvc.perform(get("/diagram"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Az adatbázisban még nincs diagramhoz használható széltoronyadat.")));
+    }
 }

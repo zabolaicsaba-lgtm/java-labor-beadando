@@ -59,6 +59,21 @@ class AdminToronyControllerTest {
     }
 
     @Test
+    void everyPageShowsCreatorsAndTemplateAttribution() throws Exception {
+        jdbc.update("INSERT INTO torony (id, darab, teljesitmeny, kezdev, helyszinid) VALUES (10, 2, 2000, 2010, 4)");
+        for (String path : new String[]{"/", "/adatbazis", "/kapcsolat", "/diagram", "/rest",
+                "/login", "/regisztracio", "/uzenetek", "/admin", "/admin/uj",
+                "/admin/10/szerkesztes", "/admin/10/torles"}) {
+            mockMvc.perform(get(path).with(user("admin").roles("ADMIN")))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(containsString("Zabolai Csaba (AO1DG3)")))
+                    .andExpect(content().string(containsString("Mészáros Márton Bence (KUS0K8)")))
+                    .andExpect(content().string(containsString("HTML5 UP")))
+                    .andExpect(content().string(containsString("CC BY 3.0")));
+        }
+    }
+
+    @Test
     void adminCanCreateEditAndDeleteWithContextPath() throws Exception {
         mockMvc.perform(get("/abc123/admin/uj").contextPath("/abc123").with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk())

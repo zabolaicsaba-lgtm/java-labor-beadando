@@ -36,6 +36,10 @@ public class Torony {
     }
 
     public Torony(Integer darab, Integer teljesitmeny, Integer kezdev, Helyszin helyszin) {
+        modositas(darab, teljesitmeny, kezdev, helyszin);
+    }
+
+    void modositas(Integer darab, Integer teljesitmeny, Integer kezdev, Helyszin helyszin) {
         this.darab = darab;
         this.teljesitmeny = teljesitmeny;
         this.kezdev = kezdev;

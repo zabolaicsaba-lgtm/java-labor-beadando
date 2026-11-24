@@ -44,4 +44,12 @@ class JavaLaborBeadandoApplicationTests {
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    void databasePageReportsWhenDatabaseProfileIsDisabled() throws Exception {
+        mockMvc.perform(get("/abc123/adatbazis").contextPath("/abc123"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Az adatbázis jelenleg nem érhető el")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/abc123/")));
+    }
 }

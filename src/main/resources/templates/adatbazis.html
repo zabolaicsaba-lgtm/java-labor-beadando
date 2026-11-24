@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adatbázis · Szélerőművek Magyarországon</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div id="wrapper">
+    <header id="header">
+        <h1>Szélerőművek adatai</h1>
+        <p>A forrásban szereplő tornyok és helyszíneik</p>
+    </header>
+    <nav id="nav" aria-label="Fő navigáció">
+        <ul>
+            <li><a th:href="@{/}">Főoldal</a></li>
+            <li><a th:href="@{/adatbazis}" class="active" aria-current="page">Adatbázis</a></li>
+        </ul>
+    </nav>
+    <main id="main">
+        <section class="main">
+            <header class="major"><h2>Széltornyok</h2></header>
+            <div th:if="${!adatbazisElerheto}" role="alert">
+                <p>Az adatbázis jelenleg nem érhető el. Az üzemeltetőnek be kell állítania az adatbázis-kapcsolatot.</p>
+            </div>
+            <div th:if="${adatbazisElerheto}">
+                <p>Egy sor az azonos helyen és évben épült, azonos teljesítményű tornyokat jelöli.
+                    A teljesítmény egy toronyra vonatkozik. Az adatok nem feltétlenül aktuálisak.</p>
+                <p th:if="${#lists.isEmpty(tornyok)}">Az adatbázisban még nincs széltoronyadat.</p>
+                <div class="table-wrapper" th:unless="${#lists.isEmpty(tornyok)}">
+                    <table>
+                        <caption>Széltornyok, településeik és megyéik</caption>
+                        <thead>
+                        <tr>
+                            <th scope="col">Település</th>
+                            <th scope="col">Megye</th>
+                            <th scope="col">Régió</th>
+                            <th scope="col">Darab</th>
+                            <th scope="col">Teljesítmény (kW / torony)</th>
+                            <th scope="col">Üzembe helyezés éve</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="torony : ${tornyok}">
+                            <td th:text="${torony.helyszin.nev}"></td>
+                            <td th:text="${torony.helyszin.megye.nev}"></td>
+                            <td th:text="${torony.helyszin.megye.regio}"></td>
+                            <td th:text="${torony.darab}"></td>
+                            <td th:text="${torony.teljesitmeny}"></td>
+                            <td th:text="${torony.kezdev}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer id="footer">
+        <p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+            Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+            <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+            <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
+    </footer>
+</div>
+</body>
+</html>

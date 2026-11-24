@@ -29,9 +29,7 @@
                     <td th:text="${torony.helyszin.megye.nev}"></td><td th:text="${torony.darab}"></td>
                     <td th:text="${torony.teljesitmeny}"></td><td th:text="${torony.kezdev}"></td>
                     <td><a th:href="@{/admin/{id}/szerkesztes(id=${torony.id})}">Szerkesztés</a>
-                        <form th:action="@{/admin/{id}/torles(id=${torony.id})}" method="post">
-                            <button type="submit">Törlés</button>
-                        </form>
+                        <a th:href="@{/admin/{id}/torles(id=${torony.id})}">Törlés</a>
                     </td>
                 </tr></tbody>
             </table></div>

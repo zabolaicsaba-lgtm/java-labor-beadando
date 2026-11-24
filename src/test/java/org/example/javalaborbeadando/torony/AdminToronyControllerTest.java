@@ -76,7 +76,18 @@ class AdminToronyControllerTest {
         assertThat(jdbc.queryForObject("SELECT darab FROM torony WHERE id = ?", Integer.class, id)).isEqualTo(3);
         mockMvc.perform(get("/admin").with(user("admin").roles("ADMIN")))
                 .andExpect(content().string(containsString("Mosonmagyaróvár")))
-                .andExpect(content().string(containsString(">3000</td>")));
+                .andExpect(content().string(containsString(">3000</td>")))
+                .andExpect(content().string(containsString("href=\"/admin/" + id + "/torles\"")));
+        mockMvc.perform(get("/abc123/admin/" + id + "/torles").contextPath("/abc123").with(user("admin").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Mosonmagyaróvár")))
+                .andExpect(content().string(containsString("Győr-Moson-Sopron")))
+                .andExpect(content().string(containsString("action=\"/abc123/admin/" + id + "/torles\"")))
+                .andExpect(content().string(containsString("href=\"/abc123/admin\"")))
+                .andExpect(content().string(containsString("name=\"_csrf\"")));
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM torony WHERE id = ?", Integer.class, id)).isEqualTo(1);
+        mockMvc.perform(get("/admin/" + id + "/torles").with(user("user").roles("USER")))
+                .andExpect(status().isForbidden());
         mockMvc.perform(post("/admin/" + id + "/torles").with(user("admin").roles("ADMIN")))
                 .andExpect(status().isForbidden());
         mockMvc.perform(post("/admin/" + id + "/torles").with(user("admin").roles("ADMIN")).with(csrf()))
@@ -94,6 +105,8 @@ class AdminToronyControllerTest {
                 .andExpect(status().isOk());
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM torony", Integer.class)).isZero();
         mockMvc.perform(get("/admin/999/szerkesztes").with(user("admin").roles("ADMIN")))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/admin/999/torles").with(user("admin").roles("ADMIN")))
                 .andExpect(status().isNotFound());
         mockMvc.perform(post("/admin/999/torles").with(user("admin").roles("ADMIN")).with(csrf()))
                 .andExpect(status().isNotFound());

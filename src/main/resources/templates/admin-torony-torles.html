@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- Stellar by HTML5 UP, adapted for this application; CC BY 3.0. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Törlés megerősítése · Szélerőművek</title>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body><div id="wrapper">
+    <header id="header"><h1>Törlés megerősítése</h1></header>
+    <nav id="nav" aria-label="Fő navigáció"><ul>
+        <li><a th:href="@{/}">Főoldal</a></li><li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+        <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li><li><a th:href="@{/diagram}">Diagram</a></li>
+        <li><a th:href="@{/rest}">REST</a></li><th:block th:replace="~{auth-menu :: auth}"></th:block>
+    </ul></nav>
+    <main id="main"><section class="main">
+        <header class="major"><h2>Széltoronyrekord törlése</h2></header>
+        <p>A törlés nem vonható vissza. A következő rekordot készülsz törölni:</p>
+        <dl>
+            <dt>Azonosító</dt><dd th:text="${torony.id}"></dd>
+            <dt>Település</dt><dd th:text="${torony.helyszin.nev}"></dd>
+            <dt>Megye</dt><dd th:text="${torony.helyszin.megye.nev}"></dd>
+            <dt>Tornyok száma</dt><dd th:text="${torony.darab}"></dd>
+            <dt>Teljesítmény (kW / torony)</dt><dd th:text="${torony.teljesitmeny}"></dd>
+            <dt>Üzembe helyezés éve</dt><dd th:text="${torony.kezdev}"></dd>
+        </dl>
+        <form th:action="@{/admin/{id}/torles(id=${torony.id})}" method="post">
+            <ul class="actions">
+                <li><button type="submit" class="primary">Törlés megerősítése</button></li>
+                <li><a class="button" th:href="@{/admin}">Mégse</a></li>
+            </ul>
+        </form>
+    </section></main>
+    <footer id="footer"><p class="copyright">Szélerőművek Magyarországon · Java alkalmazások beadandó<br>
+        Kialakítás: <a href="https://html5up.net/stellar">Stellar</a>, készítette:
+        <a href="https://html5up.net">HTML5 UP</a> · Módosított sablon ·
+        <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p></footer>
+</div></body></html>

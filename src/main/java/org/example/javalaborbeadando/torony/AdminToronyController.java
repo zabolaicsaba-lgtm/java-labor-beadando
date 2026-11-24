@@ -93,6 +93,14 @@ public class AdminToronyController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/admin/{id}/torles")
+    public String torlesMegerositese(@PathVariable Integer id, Model model) {
+        Torony torony = tornyok.findWithHelyszinById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        model.addAttribute("torony", torony);
+        return "admin-torony-torles";
+    }
+
     @PostMapping("/admin/{id}/torles")
     public String torles(@PathVariable Integer id, RedirectAttributes redirect) {
         try {

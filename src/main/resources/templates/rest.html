@@ -27,12 +27,15 @@
     <main id="main">
         <section class="main">
             <header class="major"><h2>Végpontok</h2></header>
-            <p>Az API bejelentkezés nélkül, kizárólag olvasásra használható. A válaszok a települést és a megyét is tartalmazzák.</p>
+            <p>Az olvasás bejelentkezés nélkül működik. Létrehozáshoz, módosításhoz és törléshez ADMIN felhasználó HTTP Basic azonosítása kell. A válaszok a települést és a megyét is tartalmazzák.</p>
             <ul>
                 <li><strong>GET</strong> <a th:href="@{/api/tornyok}"><code th:text="@{/api/tornyok}"></code></a> – az összes széltoronyrekord.</li>
-                <li><strong>GET</strong> <a th:href="@{/api/tornyok/1}"><code th:text="@{/api/tornyok/1}"></code></a> – egy rekord azonosító alapján; az 1 helyére más azonosító is írható.</li>
+                <li><strong>GET</strong> <a th:href="@{/api/tornyok/1}"><code th:text="@{/api/tornyok/1}"></code></a> – egy rekord azonosító alapján.</li>
+                <li><strong>POST</strong> <code th:text="@{/api/tornyok}"></code> – új rekord (JSON: darab, teljesitmeny, kezdev, helyszinId); válasz: 201 és Location fejléc. ADMIN.</li>
+                <li><strong>PUT</strong> <code th:text="@{/api/tornyok/1}"></code> – rekord módosítása, ugyanazzal a JSON-nal. ADMIN.</li>
+                <li><strong>DELETE</strong> <code th:text="@{/api/tornyok/1}"></code> – rekord törlése; válasz: 204. ADMIN.</li>
             </ul>
-            <p>Nem létező azonosító esetén a válasz HTTP 404. Kikapcsolt adatbázis-profil esetén a végpontok HTTP 503 választ adnak.</p>
+            <p>Nem létező azonosító esetén a válasz HTTP 404, hibás adatnál 400, hiányzó bejelentkezésnél 401, USER szerepkörnél 403. Kikapcsolt adatbázis-profil esetén a végpontok HTTP 503 választ adnak.</p>
         </section>
     </main>
     <footer th:replace="~{footer :: footer}"></footer>

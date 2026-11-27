@@ -3,13 +3,16 @@ package org.example.javalaborbeadando;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -32,16 +35,32 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(1)
+    SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        return http.securityMatcher("/api/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/api/tornyok", "/api/tornyok/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/tornyok").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/tornyok/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/tornyok/*").hasRole("ADMIN")
+                        .anyRequest().denyAll())
+                .httpBasic(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .build();
+    }
+
+    @Bean
+    @Order(2)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/adatbazis", "/kapcsolat", "/diagram", "/rest", "/login", "/regisztracio", "/css/**", "/assets/**", "/js/**", "/vendor/**", "/error").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/tornyok", "/api/tornyok/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/uzenetek").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
-                .anyRequest().denyAll())
+                        .requestMatchers("/", "/adatbazis", "/kapcsolat", "/diagram", "/rest", "/login", "/regisztracio", "/css/**", "/assets/**", "/js/**", "/vendor/**", "/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uzenetek").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                        .anyRequest().denyAll())
                 .exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
-                        new HttpStatusEntryPoint(HttpStatus.FORBIDDEN),
-                        PathPatternRequestMatcher.withDefaults().matcher("/api/**"))
+                                new HttpStatusEntryPoint(HttpStatus.FORBIDDEN),
+                                PathPatternRequestMatcher.withDefaults().matcher("/api/**"))
                         .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
                                 PathPatternRequestMatcher.withDefaults().matcher("/uzenetek"))
                         .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),

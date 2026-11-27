@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -125,8 +124,10 @@ class AdatbazisControllerTest {
                 .andExpect(jsonPath("$.helyszin").value("Mosonmagyaróvár"));
         mockMvc.perform(get("/api/tornyok/999"))
                 .andExpect(status().isNotFound());
-        mockMvc.perform(post("/api/tornyok").with(csrf()))
-                .andExpect(status().isForbidden());
+        mockMvc.perform(post("/api/tornyok")
+                        .contentType("application/json")
+                        .content("{\"darab\":1,\"teljesitmeny\":1,\"kezdev\":2000,\"helyszinId\":4}"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
